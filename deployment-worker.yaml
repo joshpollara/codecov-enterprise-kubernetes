@@ -13,22 +13,20 @@ spec:
         version: v1
     spec:
       volumes:
-      - name: codecov-config
-        configMap:
-          name: codecov
       - name: worker-archive
         persistentVolumeClaim:
           claimName: worker-archive
       containers:
       - name: worker
         image: codecov/enterprise:v4.3.9
+        env:
+        - name: SETUP_ENTERPRISE_LICENSE
+          volume: null
         command: [ "/bin/run" ]
         args: [ "worker" ]
         ports:
         - name: http
           containerPort: 5000
         volumeMounts:
-        - name: codecov-config
-          mountPath: /config
         - name: worker-archive
           mountPath: /archive

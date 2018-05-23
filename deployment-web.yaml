@@ -13,22 +13,20 @@ spec:
         version: v1
     spec:
       volumes:
-      - name: codecov-config
-        configMap:
-          name: codecov
       - name: web-archive
         persistentVolumeClaim:
           claimName: web-archive
       containers:
       - name: web
         image: codecov/enterprise:v4.3.9
+        env:
+        - name: SETUP_ENTERPRISE_LICENSE
+          volume: null
         command: [ "/bin/run" ]
         args: [ "web" ]
         ports:
         - name: http
           containerPort: 5000
         volumeMounts:
-        - name: codecov-config
-          mountPath: /config
         - name: web-archive
           mountPath: /archive

@@ -1,0 +1,34 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: worker
+  labels:
+    app: worker
+    version: v1
+spec:
+  template:
+    metadata:
+      labels:
+        app: worker
+        version: v1
+    spec:
+      volumes:
+      - name: codecov-config
+        configMap:
+          name: codecov
+      - name: worker-archive
+        persistentVolumeClaim:
+          claimName: worker-archive
+      containers:
+      - name: worker
+        image: codecov/enterprise:v4.3.9
+        command: [ "/bin/run" ]
+        args: [ "worker" ]
+        ports:
+        - name: http
+          containerPort: 5000
+        volumeMounts:
+        - name: codecov-config
+          mountPath: /config
+        - name: worker-archive
+          mountPath: /archive

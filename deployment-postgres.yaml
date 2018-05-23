@@ -1,0 +1,30 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: postgres
+  labels:
+    app: postgres
+    version: v1
+spec:
+  template:
+    metadata:
+      labels:
+        app: postgres
+        version: v1
+    spec:
+      volumes:
+      - name: postgres-data
+        persistentVolumeClaim:
+          claimName: postgres-data
+      containers:
+      - name: postgres
+        image: postgres:9.3
+        env:
+        - name: PGDATA
+          volume: /var/lib/postgresql/data/pgdata
+        env:
+        volumeMounts:
+        - name: postgres-data
+          mountPath: /var/lib/postgresql/data
+          subPath: postgres-data
+          name: postgres-data
